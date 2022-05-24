@@ -23,7 +23,6 @@ jobs:
       matrix:
         node-version: [12.x, 14.x, 16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
@@ -31,6 +30,22 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+    - name: Install dependencies
+      run:  |
+        cd my-app
+        npm ci
+    - name: Build the app
+      run:  |
+        cd my-app
+        npm run build
+    - name: Run component tests
+      # Have to use either test a or --watchAll in the json file test script
+      run:  |
+        cd my-app
+        npm run test a
+    - name: Start the app
+      run: |
+        cd my-app
+        npm start &
+        npx wait-on --timeout 60000
+        
