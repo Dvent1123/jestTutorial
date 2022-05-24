@@ -45,4 +45,3 @@ jobs:
         cd my-app
         npm start &
         npx wait-on --timeout 60000
-        
